@@ -1,5 +1,5 @@
 // src/types.ts
-import * as vscode from 'vscode';
+import type * as vscode from 'vscode';
 
 export interface Change {
     type: 'method' | 'partial';
@@ -9,3 +9,10 @@ export interface Change {
     diffText: string;
     range: vscode.Range;
 }
+
+// Re-export vscode types we need
+export type Range = vscode.Range;
+export type Position = vscode.Position;
+export type TextEditor = vscode.TextEditor;
+export type Uri = vscode.Uri;
+export type ExtensionContext = vscode.ExtensionContext;

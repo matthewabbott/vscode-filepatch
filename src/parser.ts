@@ -1,15 +1,14 @@
 // src/parser.ts
 import * as vscode from 'vscode';
+import type { Range, Position } from './types.js';
 
 export interface Method {
     signature: string;
     body: string;
-    range: vscode.Range;
+    range: Range;
 }
 
 export async function parseCode(content: string): Promise<Method[]> {
-    // This is a simple regex-based parser for demonstration
-    // In a production version, you'd want to use a proper AST parser
     const methods: Method[] = [];
     const methodRegex = /(?:public|private|protected|internal|static).*?\s+(\w+)\s*\([^)]*\)\s*{([^}]*)}/gs;
     

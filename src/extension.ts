@@ -1,9 +1,10 @@
 // src/extension.ts
 import * as vscode from 'vscode';
-import { PatchManager } from './patchManager';
-import { DiffPresenter } from './diffPresenter';
+import { PatchManager } from './patchManager.js';
+import { DiffPresenter } from './diffPresenter.js';
+import type { ExtensionContext } from './types.js';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
     console.log('vscode-filepatch is now active');
 
     let disposable = vscode.commands.registerCommand('vscode-filepatch.applyPatch', async () => {
@@ -14,7 +15,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         try {
-            // Get the patch content from the user
             // Create a new untitled document for patch input
             const document = await vscode.workspace.openTextDocument({ 
                 content: '', 
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
             });
             const editor = await vscode.window.showTextDocument(document);
             
-            // Wait for user to input the patch and press a key (e.g., Ctrl+S)
+            // Wait for user to input the patch and press a key
             const result = await vscode.window.showInformationMessage(
                 'Paste your patch content and press Enter when done',
                 'Done', 'Cancel'

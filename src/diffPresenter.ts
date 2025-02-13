@@ -1,6 +1,6 @@
 // src/diffPresenter.ts
 import * as vscode from 'vscode';
-import { Change } from './types';
+import type { Change, Uri } from './types.js';
 
 export class DiffPresenter {
     async showDiffAndGetApproval(changes: Change[]): Promise<Change[]> {
@@ -45,13 +45,13 @@ export class DiffPresenter {
 
         // Register text document content provider for the diff editor
         const registration = vscode.workspace.registerTextDocumentContentProvider('original', {
-            provideTextDocumentContent(uri: vscode.Uri): string {
+            provideTextDocumentContent(uri: Uri): string {
                 return change.originalContent;
             }
         });
 
         const registration2 = vscode.workspace.registerTextDocumentContentProvider('modified', {
-            provideTextDocumentContent(uri: vscode.Uri): string {
+            provideTextDocumentContent(uri: Uri): string {
                 return change.newContent;
             }
         });
