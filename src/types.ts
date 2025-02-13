@@ -1,8 +1,7 @@
 // src/types.ts
-import type * as vscode from 'vscode';
+import * as vscode from 'vscode';
 
 export interface Change {
-    type: 'method' | 'partial';
     identifier: string;
     originalContent: string;
     newContent: string;
