@@ -14,7 +14,29 @@
     "commands": [
       {
         "command": "vscode-filepatch.applyPatch",
-        "title": "Apply Partial File Patch"
+        "title": "Start Patch Review"
+      },
+      {
+        "command": "vscode-filepatch.copyUnmodified",
+        "title": "Copy Unmodified Content"
+      },
+      {
+        "command": "vscode-filepatch.saveChanges",
+        "title": "Apply Changes to Original File"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "vscode-filepatch.copyUnmodified",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
+        "when": "isInDiffEditor"
+      },
+      {
+        "command": "vscode-filepatch.saveChanges",
+        "key": "ctrl+alt+s",
+        "mac": "cmd+alt+s",
+        "when": "isInDiffEditor"
       }
     ]
   },
