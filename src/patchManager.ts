@@ -1,7 +1,7 @@
 // src/patchManager.ts
 import * as vscode from 'vscode';
-import { parseCode, findMethods, Method } from './parser';
-import { Change } from './types';
+import { parseCode, findMethods, Method } from './parser.js';
+import { Change } from './types.js';
 import { createPatch } from 'diff';
 
 export class PatchManager {
@@ -44,9 +44,9 @@ export class PatchManager {
         return changes;
     }
 
-    private methodSignaturesMatch(method1: Method, method2: Method): boolean {
+    private methodSignaturesMatch(m1: Method, m2: Method): boolean {
         // Simple signature matching - can be made more sophisticated
-        return method1.signature === method2.signature;
+        return m1.signature === m2.signature;
     }
 
     async applyChanges(editor: vscode.TextEditor, changes: Change[]): Promise<void> {
