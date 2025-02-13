@@ -15,10 +15,24 @@ export function activate(context: vscode.ExtensionContext) {
 
         try {
             // Get the patch content from the user
-            const patchContent = await vscode.window.showInputBox({
-                prompt: 'Paste the patch content (modified methods only)',
-                multiline: true
+            // Create a new untitled document for patch input
+            const document = await vscode.workspace.openTextDocument({ 
+                content: '', 
+                language: 'typescript' 
             });
+            const editor = await vscode.window.showTextDocument(document);
+            
+            // Wait for user to input the patch and press a key (e.g., Ctrl+S)
+            const result = await vscode.window.showInformationMessage(
+                'Paste your patch content and press Enter when done',
+                'Done', 'Cancel'
+            );
+            
+            if (result !== 'Done') {
+                return;
+            }
+            
+            const patchContent = editor.document.getText();
 
             if (!patchContent) {
                 return;
@@ -49,7 +63,8 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showInformationMessage('No changes were approved');
             }
         } catch (error) {
-            vscode.window.showErrorMessage(`Error applying patch: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            vscode.window.showErrorMessage(`Error applying patch: ${errorMessage}`);
         }
     });
 

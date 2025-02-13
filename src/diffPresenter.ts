@@ -45,14 +45,14 @@ export class DiffPresenter {
 
         // Register text document content provider for the diff editor
         const registration = vscode.workspace.registerTextDocumentContentProvider('original', {
-            provideTextDocument(uri: vscode.Uri): vscode.ProviderResult<vscode.TextDocument> {
-                return Promise.resolve(change.originalContent);
+            provideTextDocumentContent(uri: vscode.Uri): string {
+                return change.originalContent;
             }
         });
 
         const registration2 = vscode.workspace.registerTextDocumentContentProvider('modified', {
-            provideTextDocument(uri: vscode.Uri): vscode.ProviderResult<vscode.TextDocument> {
-                return Promise.resolve(change.newContent);
+            provideTextDocumentContent(uri: vscode.Uri): string {
+                return change.newContent;
             }
         });
 
