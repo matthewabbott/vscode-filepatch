@@ -1,26 +1,28 @@
 // src/parser.ts
 import * as vscode from 'vscode';
-import type { Range, Position } from './types.js';
+import type { Range, Position } from './types';
 
 export interface Method {
     signature: string;
     body: string;
+    fullContent: string;  // The entire method including signature
     range: Range;
 }
 
 export async function parseCode(content: string): Promise<Method[]> {
     const methods: Method[] = [];
-    const methodRegex = /(?:public|private|protected|internal|static).*?\s+(\w+)\s*\([^)]*\)\s*{([^}]*)}/gs;
+    // Extended regex that captures the full method including signature
+    const methodRegex = /((?:public|private|protected|internal|static).*?\s+\w+\s*\([^)]*\)\s*{)([\s\S]*?)}/g;
     
     let match;
     while ((match = methodRegex.exec(content)) !== null) {
-        const fullMatch = match[0];
-        const methodName = match[1];
+        const signature = match[1];
         const body = match[2];
+        const fullContent = match[0];
         
         // Calculate the range
-        const startPos = content.indexOf(fullMatch);
-        const endPos = startPos + fullMatch.length;
+        const startPos = content.indexOf(fullContent);
+        const endPos = startPos + fullContent.length;
         
         const startPosition = new vscode.Position(
             content.substring(0, startPos).split('\n').length - 1,
@@ -32,13 +34,20 @@ export async function parseCode(content: string): Promise<Method[]> {
         );
         
         methods.push({
-            signature: methodName,
+            signature: extractMethodName(signature),
             body: body.trim(),
+            fullContent: fullContent,
             range: new vscode.Range(startPosition, endPosition)
         });
     }
     
     return methods;
+}
+
+function extractMethodName(signature: string): string {
+    // Extract just the method name from the signature
+    const nameMatch = signature.match(/\s(\w+)\s*\(/);
+    return nameMatch ? nameMatch[1] : signature;
 }
 
 export async function findMethods(content: string): Promise<Method[]> {

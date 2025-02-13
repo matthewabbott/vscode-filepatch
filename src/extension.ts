@@ -1,8 +1,8 @@
 // src/extension.ts
 import * as vscode from 'vscode';
+import { PatchManager } from './patchManager';
 import { DiffPresenter } from './diffPresenter';
-import type { ExtensionContext, Change } from './types';
-import { createPatch } from 'diff';
+import type { ExtensionContext } from './types';
 
 export function activate(context: ExtensionContext) {
     console.log('vscode-filepatch is now active');
@@ -29,7 +29,7 @@ export function activate(context: ExtensionContext) {
 
             // Wait for user input
             const result = await vscode.window.showInformationMessage(
-                'Paste the updated code and press Enter when done',
+                'Paste the updated methods and press Enter when done',
                 { modal: true },
                 'Done',
                 'Cancel'
@@ -44,28 +44,28 @@ export function activate(context: ExtensionContext) {
                 return;
             }
 
-            // Create the change
-            const change: Change = {
-                identifier: editor.document.fileName,
-                originalContent: originalText,
-                newContent: patchText,
-                diffText: createPatch('file', originalText, patchText),
-                range: new vscode.Range(
-                    editor.document.positionAt(0),
-                    editor.document.positionAt(originalText.length)
-                )
-            };
-
-            // Show diff and get approval
+            const patchManager = new PatchManager();
             const diffPresenter = new DiffPresenter();
-            const approved = await diffPresenter.showDiffAndGetApproval(change);
 
-            if (approved) {
-                const edit = new vscode.WorkspaceEdit();
-                edit.replace(editor.document.uri, change.range, change.newContent);
-                await vscode.workspace.applyEdit(edit);
-                vscode.window.showInformationMessage('Changes applied successfully');
+            // Generate changes based on method differences
+            const changes = await patchManager.generateChanges(originalText, patchText);
+
+            if (changes.length === 0) {
+                vscode.window.showInformationMessage('No method changes detected');
+                return;
             }
+
+            // Process each change one at a time
+            for (const change of changes) {
+                // Show the diff and get approval
+                const approved = await diffPresenter.showDiffAndGetApproval(change);
+                
+                if (approved) {
+                    await patchManager.applyChange(editor, change);
+                }
+            }
+
+            vscode.window.showInformationMessage('Finished processing changes');
 
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error occurred';

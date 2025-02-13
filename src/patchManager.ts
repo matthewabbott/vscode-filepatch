@@ -1,7 +1,7 @@
 // src/patchManager.ts
 import * as vscode from 'vscode';
-import { parseCode, findMethods, Method } from './parser.js';
-import type { Change, TextEditor } from './types.js';
+import { parseCode, findMethods, Method } from './parser';
+import type { Change, TextEditor } from './types';
 import { createPatch } from 'diff';
 
 export class PatchManager {
@@ -15,50 +15,37 @@ export class PatchManager {
         // Compare methods and generate changes
         for (const patchMethod of patchMethods) {
             const originalMethod = originalMethods.find(m => 
-                this.methodSignaturesMatch(m, patchMethod)
+                this.methodSignaturesMatch(m.signature, patchMethod.signature)
             );
 
-            if (originalMethod) {
-                // Generate diff if methods are different
-                if (originalMethod.body !== patchMethod.body) {
-                    const diff = createPatch(
-                        'temp',
-                        originalMethod.body,
-                        patchMethod.body,
+            if (originalMethod && originalMethod.body !== patchMethod.body) {
+                changes.push({
+                    identifier: patchMethod.signature,
+                    originalContent: originalMethod.fullContent,
+                    newContent: patchMethod.fullContent,
+                    diffText: createPatch(
+                        patchMethod.signature,
+                        originalMethod.fullContent,
+                        patchMethod.fullContent,
                         '',
                         ''
-                    );
-
-                    changes.push({
-                        type: 'method',
-                        identifier: patchMethod.signature,
-                        originalContent: originalMethod.body,
-                        newContent: patchMethod.body,
-                        diffText: diff,
-                        range: originalMethod.range
-                    });
-                }
+                    ),
+                    range: originalMethod.range
+                });
             }
         }
 
         return changes;
     }
 
-    private methodSignaturesMatch(m1: Method, m2: Method): boolean {
-        return m1.signature === m2.signature;
+    private methodSignaturesMatch(original: string, patch: string): boolean {
+        // Remove whitespace and compare
+        return original.replace(/\s+/g, '') === patch.replace(/\s+/g, '');
     }
 
-    async applyChanges(editor: TextEditor, changes: Change[]): Promise<void> {
+    async applyChange(editor: TextEditor, change: Change): Promise<void> {
         const edit = new vscode.WorkspaceEdit();
-
-        for (const change of changes) {
-            edit.replace(
-                editor.document.uri,
-                change.range,
-                change.newContent
-            );
-        }
-
+        edit.replace(editor.document.uri, change.range, change.newContent);
         await vscode.workspace.applyEdit(edit);
     }
 }
