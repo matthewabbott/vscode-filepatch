@@ -16,3 +16,4 @@ export type Position = vscode.Position;
 export type TextEditor = vscode.TextEditor;
 export type Uri = vscode.Uri;
 export type ExtensionContext = vscode.ExtensionContext;
+export type WorkspaceEdit = vscode.WorkspaceEdit;

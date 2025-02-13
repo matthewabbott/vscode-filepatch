@@ -1,7 +1,7 @@
 // src/patchManager.ts
 import * as vscode from 'vscode';
 import { parseCode, findMethods, Method } from './parser.js';
-import type { Change, TextEditor } from './types.js';
+import type { Change, TextEditor, WorkspaceEdit } from './types.js';
 import { createPatch } from 'diff';
 
 export class PatchManager {
