@@ -9,7 +9,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -40,7 +39,6 @@
     "typescript": "^5.3.2"
   },
   "dependencies": {
-    "diff": "^5.1.0",
-    "vscode-filepatch": "file:"
+    "diff": "^5.1.0"
   }
 }
