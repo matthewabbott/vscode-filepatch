@@ -21,7 +21,7 @@ I made this thing basically to make it easy to use the diff viewer on temp paste
 5. Create a .vsix package:
    ```bash
    npm install -g @vscode/vsce
-   vsce package
+   vsce package --allow-missing-repository
    ```
 6. Install the extension in VS Code:
    - Press `Ctrl+Shift+P` (Mac: `Cmd+Shift+P`)
