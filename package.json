@@ -16,6 +16,19 @@
         "command": "vscode-filepatch.applyPatch",
         "title": "Open Diff View for Patching"
       }
+    ],
+    "keybindings": [
+      {
+        "command": "vscode-filepatch.applyPatch",
+        "key": "ctrl+k ctrl+p",
+        "mac": "cmd+k cmd+p"
+      },
+      {
+        "command": "vscode-filepatch.saveChanges",
+        "key": "ctrl+k ctrl+s",
+        "mac": "cmd+k cmd+s",
+        "when": "editorTextFocus"
+      }
     ]
   },
   "scripts": {
