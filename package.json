@@ -1,7 +1,7 @@
 {
   "name": "vscode-filepatch",
   "displayName": "File Patch Helper",
-  "description": "Helps apply partial file patches, especially useful for AI-suggested code changes",
+  "description": "Opens a diff view for quick file patching",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.85.0"
@@ -14,53 +14,17 @@
     "commands": [
       {
         "command": "vscode-filepatch.applyPatch",
-        "title": "Start Patch Review"
-      },
-      {
-        "command": "vscode-filepatch.copyUnmodified",
-        "title": "Copy Unmodified Content"
-      },
-      {
-        "command": "vscode-filepatch.saveChanges",
-        "title": "Apply Changes to Original File"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "vscode-filepatch.copyUnmodified",
-        "key": "ctrl+alt+c",
-        "mac": "cmd+alt+c",
-        "when": "isInDiffEditor"
-      },
-      {
-        "command": "vscode-filepatch.saveChanges",
-        "key": "ctrl+alt+s",
-        "mac": "cmd+alt+s",
-        "when": "isInDiffEditor"
+        "title": "Open Diff View for Patching"
       }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "compile": "tsc -p ./"
   },
   "devDependencies": {
-    "@types/diff": "^5.0.0",
-    "@types/mocha": "^10.0.6",
     "@types/node": "20.x",
     "@types/vscode": "^1.85.0",
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-    "@typescript-eslint/parser": "^6.13.1",
-    "@vscode/test-electron": "^2.3.8",
-    "eslint": "^8.54.0",
-    "mocha": "^10.2.0",
     "typescript": "^5.3.2"
-  },
-  "dependencies": {
-    "diff": "^5.1.0"
   }
 }
